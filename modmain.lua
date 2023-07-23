@@ -12,7 +12,7 @@ GLOBAL.TUNING.INFINITELIGHT = {
   activeAt = GetModConfigData("activeAt"),
   lightRadius = GetModConfigData("lightRadius"),
   visibleOnMap = GetModConfigData("visibleOnMap"),
-  craftable = GetModConfigData("craftable")
+  craftable = GetModConfigData("craftable"),
 }
 
 PrefabFiles =
@@ -25,49 +25,38 @@ local Ingredient = _G.Ingredient
 local RECIPETABS = _G.RECIPETABS
 local TECH = _G.RECIPETABS
 
+local activeAt = TUNING.INFINITELIGHT.activeAt
+local craftable = TUNING.INFINITELIGHT.craftable
+
 local mainComponentQuantity = 1
 if mainComponent == "goldnugget" then
   mainComponentQuantity = 5
 end
 
+local recipe_name = "city_lamp"
+local ingredients = {
+  Ingredient(mainComponent, (mainComponentQuantity * difficultyMultiplier)),
+  Ingredient("transistor", (3 * difficultyMultiplier)),
+  Ingredient("lantern", 1)
+}
+local tech = TECH.SCIENCE_TWO
+local config = {
+  placer = "city_lamp_placer",
+  atlas = "images/city_lamp.xml",
+}
+local config2 = {
+  placer = "city_lamp_placer",
+  atlas = "images/city_lamp.xml",
+  builder_tag = "nobody",
+}
+
 if craftable == "true" then
-  AddRecipe("city_lamp",
-    {
-      Ingredient(mainComponent, (mainComponentQuantity * difficultyMultiplier)),
-      Ingredient("transistor", (3 * difficultyMultiplier)),
-      Ingredient("lantern", 1)
-    },
-    RECIPETABS.LIGHT,
-    TECH.SCIENCE_TWO,
-    "city_lamp_placer",
-    nil,
-    nil,
-    nil,
-    nil,
-    "images/city_lamp.xml"
-  )
+  AddRecipe2(recipe_name, ingredients, tech, config)
 else
-  AddRecipe("city_lamp",
-    {
-      Ingredient(mainComponent, (mainComponentQuantity * difficultyMultiplier)),
-      Ingredient("transistor", (3 * difficultyMultiplier)),
-      Ingredient("lantern", 1)
-    },
-    RECIPETABS.LIGHT,
-    TECH.SCIENCE_TWO,
-    "city_lamp_placer",
-    nil,
-    nil,
-    nil,
-    "nobody",
-    "images/city_lamp.xml"
-  )
+  AddRecipe2(recipe_name, ingredients, tech, config2)
 end
 
-AddRecipeToFilter(
-  "city_lamp",
-  "LIGHT"
-)
+AddRecipeToFilter(recipe_name, "LIGHT")
 
 if RECIPE_ID == 0 then
   AddSimPostInit(function()
